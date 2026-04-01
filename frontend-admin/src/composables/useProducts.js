@@ -138,6 +138,27 @@ export function useProducts() {
     )
   }
 
+  // 根据分类和关键词搜索商品
+  function getFilteredProducts(category, keyword) {
+    let result = products.value
+
+    // 先按分类过滤
+    if (category && category !== '全部') {
+      result = result.filter(p => p.category === category)
+    }
+
+    // 再按关键词搜索
+    if (keyword) {
+      const lowerKeyword = keyword.toLowerCase()
+      result = result.filter(p =>
+        p.name.toLowerCase().includes(lowerKeyword) ||
+        p.description.toLowerCase().includes(lowerKeyword)
+      )
+    }
+
+    return result
+  }
+
   return {
     products,
     loading,
@@ -145,6 +166,7 @@ export function useProducts() {
     getProductById,
     getProductsByCategory,
     getCategories,
-    searchProducts
+    searchProducts,
+    getFilteredProducts
   }
 }
