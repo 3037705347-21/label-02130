@@ -19,14 +19,17 @@ const categories = getCategories()
 const filteredProducts = computed(() => {
   let result = getProductsByCategory(selectedCategory.value)
   if (searchKeyword.value) {
-    result = searchProducts(searchKeyword.value)
+    const lowerKeyword = searchKeyword.value.toLowerCase()
+    result = result.filter(p =>
+      p.name.toLowerCase().includes(lowerKeyword) ||
+      p.description.toLowerCase().includes(lowerKeyword)
+    )
   }
   return result
 })
 
 function selectCategory(category) {
   selectedCategory.value = category
-  searchKeyword.value = ''
 }
 
 function handlePurchase(product) {
