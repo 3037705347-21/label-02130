@@ -7,7 +7,7 @@ import { useToast } from '@/composables/useToast'
 import ProductCard from '@/components/ProductCard.vue'
 
 const router = useRouter()
-const { getCategories, getProductsByCategory, searchProducts } = useProducts()
+const { getCategories, getProductsByCategory } = useProducts()
 const orderStore = useOrderStore()
 const toast = useToast()
 
@@ -19,14 +19,17 @@ const categories = getCategories()
 const filteredProducts = computed(() => {
   let result = getProductsByCategory(selectedCategory.value)
   if (searchKeyword.value) {
-    result = searchProducts(searchKeyword.value)
+    const lowerKeyword = searchKeyword.value.toLowerCase()
+    result = result.filter(p =>
+      p.name.toLowerCase().includes(lowerKeyword) ||
+      p.description.toLowerCase().includes(lowerKeyword)
+    )
   }
   return result
 })
 
 function selectCategory(category) {
   selectedCategory.value = category
-  searchKeyword.value = ''
 }
 
 function handlePurchase(product) {
